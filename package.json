@@ -1,0 +1,22 @@
+{
+  "name": "guess-my-number",
+  "version": "1.0.0",
+  "description": "guessing the number",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lavet13/guess-the-number.git"
+  },
+  "author": "Jonas, he's excellent teacher",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lavet13/guess-the-number/issues"
+  },
+  "homepage": "https://github.com/lavet13/guess-the-number#readme",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
