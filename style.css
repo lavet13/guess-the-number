@@ -75,8 +75,8 @@ h1 {
   background: var(--color-grey-light);
   color: #333;
   font-size: 6rem;
-  width: 20rem;
-  padding: 3rem 0rem 3rem .8rem;
+  width: 25rem;
+  padding: 3rem 0rem;
   text-align: center;
 
   position: absolute;
