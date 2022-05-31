@@ -6,6 +6,8 @@
 
   --color-grey-light: #eee;
   --color-grey-dark: #ccc;
+
+  --font-family-primary: 'Press Start 2P', sans-serif;
 }
 
 * {
@@ -25,7 +27,7 @@ html {
 }
 
 body {
-  font-family: 'Press Start 2P', sans-serif;
+  font-family: var(--font-family-primary);
   color: var(--color-grey-light);
   background-color: var(--color-primary);
   /* background-color: var(--color-secondary); */
