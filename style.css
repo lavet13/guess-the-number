@@ -30,7 +30,6 @@ body {
   font-family: var(--font-family-primary);
   color: var(--color-grey-light);
   background-color: var(--color-primary);
-  /* background-color: var(--color-secondary); */
 }
 
 /* LAYOUT */
@@ -134,6 +133,7 @@ h1 {
 
   user-select: none;
 }
+
 
 .btn:hover {
   background-color: var(--color-grey-dark);
