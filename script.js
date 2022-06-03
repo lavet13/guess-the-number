@@ -25,6 +25,7 @@ let score, secretNumber, message, currentColor;
 const colors = {
   primary: '#222',
   secondary: '#60b347',
+  tertiary: '#e21919',
 };
 
 // console.log(colors.primary); // test
@@ -50,8 +51,8 @@ const fillLocalStorage = function () {
   }
 
   document.querySelector('.score').textContent = score;
-  document.querySelector('.number').textContent = secretNumber;
   document.querySelector('.message').textContent = message;
+  document.querySelector('.number').textContent = '?';
   document.body.style.backgroundColor = currentColor;
 };
 
@@ -60,7 +61,7 @@ fillLocalStorage();
 const hasCompleted = function () {
   const check = document.querySelector('.check');
 
-  if (currentColor === colors.secondary) {
+  if (currentColor === colors.secondary || currentColor === colors.tertiary) {
     check.style.cssText = `cursor: not-allowed;
     background-color: #ccc`;
     check.setAttribute('disabled', '');
@@ -79,24 +80,29 @@ document.querySelector('.check').addEventListener('click', function (e) {
   console.log(guess, typeof guess); // test
   if (currentColor === colors.primary && score > 0) {
     if (!guess) {
-      // if it's empty
+      // when there is no input
       document.querySelector('.message').textContent = '😐✋ No number!';
       localStorage.setItem('message', '😐✋ No number!');
     } else if (guess === secretNumber) {
+      // When player wins
       currentColor = colors.secondary;
       document.querySelector('.message').textContent = '🎉 Corrent Number!';
       hasCompleted();
       document.body.style.backgroundColor = currentColor;
+      document.querySelector('.number').style.width = `${35}rem`;
+      document.querySelector('.number').textContent = secretNumber;
 
       localStorage.setItem('message', '🎉 Corrent Number!');
       localStorage.setItem('currentColor', currentColor);
     } else if (guess > secretNumber) {
+      // When guess is too high
       score--;
       document.querySelector('.message').textContent = '📈 Too high!';
       document.querySelector('.score').textContent = score;
       localStorage.setItem('message', '📈 Too high!');
       localStorage.setItem('score', score);
     } else if (guess < secretNumber) {
+      // When guess is too low
       score--;
       document.querySelector('.message').textContent = '📉 Too low!';
       document.querySelector('.score').textContent = score;
@@ -106,8 +112,13 @@ document.querySelector('.check').addEventListener('click', function (e) {
   }
 
   if (!(score > 0)) {
-    document.body.style.backgroundColor = 'red';
-    document.querySelector('.message').textContent = 'You lost!';
+    currentColor = colors.tertiary;
+    document.querySelector('.message').textContent = 'You lost! 😭';
+    hasCompleted();
+    document.body.style.backgroundColor = currentColor;
+
+    localStorage.setItem('message', 'You lost! 😭');
+    localStorage.setItem('currentColor', currentColor);
   }
 });
 
@@ -118,3 +129,22 @@ document.querySelector('.again').addEventListener('click', function (e) {
   localStorage.clear();
   fillLocalStorage();
 });
+
+/*
+Coding Challenge #1
+Implement a game rest functionality, so that the player can make a new guess!
+
+Your tasks:
+1. Select the element with the 'again' class and attach a click event handler
+
+2. In the handler function, restore initial values of the 'score' and
+'secretNumber' variables
+
+3. Restore the initial conditions of the message, number, score and guess input
+fields
+
+4. Also restore the original background color (#222) and number width (15rem)
+
+GOOD LUCK �
+
+*/

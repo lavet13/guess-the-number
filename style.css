@@ -3,6 +3,7 @@
 :root {
   --color-primary: #222;
   --color-secondary: #60b347;
+  --color-tertiary: #e21919;
 
   --color-grey-light: #eee;
   --color-grey-dark: #ccc;
@@ -82,9 +83,8 @@ h1 {
 
   position: absolute;
   left: 50%;
-  bottom: -4px;
+  bottom: 0;
   transform: translate(-50%, 50%);
-  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
   user-select: none;
 }
 
