@@ -19,16 +19,49 @@ console.log(document.querySelector('.guess').value);
 
 // now it's between 1 to 20
 
-let score, secretNumber, message, currentColor;
+let score, secretNumber, message, currentColor, highScore;
 
-// TODO implement red color
 const colors = {
   primary: '#222',
   secondary: '#60b347',
   tertiary: '#e21919',
 };
 
-// console.log(colors.primary); // test
+const displayMessage = function (message) {
+  document.querySelector('.message').textContent = message;
+  localStorage.setItem('message', message);
+};
+
+const displayColor = function (color) {
+  currentColor = color;
+  document.body.style.backgroundColor = color;
+  localStorage.setItem('currentColor', color);
+};
+
+const displaySecretNumber = function (number) {
+  document.querySelector('.number').textContent = number;
+};
+
+const decreaseScore = function () {
+  score--;
+  document.querySelector('.score').textContent = score;
+  localStorage.setItem('score', score);
+};
+
+const displayHighScore = function (highScore) {
+  document.querySelector('.highscore').textContent = highScore;
+};
+
+const clearInputField = function () {
+  document.querySelector('.guess').value = '';
+  document.querySelector('.check').style.cssText = `cursor: auto;`;
+  document.querySelector('.check').removeAttribute('disabled');
+};
+
+const clearLocalStorage = function () {
+  localStorage.clear();
+  localStorage.setItem('highScore', highScore);
+};
 
 // Each domain can store up to 5MB of data in LocalStorage 😄
 
@@ -43,14 +76,20 @@ const fillLocalStorage = function () {
     localStorage.setItem('secretNumber', secretNumber);
     localStorage.setItem('message', message);
     localStorage.setItem('currentColor', currentColor);
+    if (!localStorage.getItem('highScore')) {
+      highScore = 0;
+      localStorage.setItem('highScore', highScore);
+    }
   } else {
     score = localStorage.getItem('score');
+    highScore = localStorage.getItem('highScore');
     secretNumber = Number(localStorage.getItem('secretNumber'));
     message = localStorage.getItem('message');
     currentColor = localStorage.getItem('currentColor');
   }
 
   document.querySelector('.score').textContent = score;
+  document.querySelector('.highscore').textContent = highScore;
   document.querySelector('.message').textContent = message;
   document.querySelector('.number').textContent = '?';
   document.body.style.backgroundColor = currentColor;
@@ -78,55 +117,38 @@ document.querySelector('.check').addEventListener('click', function (e) {
   const guess = Number(document.querySelector('.guess').value); // getting value from our input
 
   console.log(guess, typeof guess); // test
-  if (currentColor === colors.primary && score > 0) {
-    if (!guess) {
-      // when there is no input
-      document.querySelector('.message').textContent = '😐✋ No number!';
-      localStorage.setItem('message', '😐✋ No number!');
-    } else if (guess === secretNumber) {
-      // When player wins
-      currentColor = colors.secondary;
-      document.querySelector('.message').textContent = '🎉 Corrent Number!';
-      hasCompleted();
-      document.body.style.backgroundColor = currentColor;
-      document.querySelector('.number').style.width = `${35}rem`;
-      document.querySelector('.number').textContent = secretNumber;
-
-      localStorage.setItem('message', '🎉 Corrent Number!');
-      localStorage.setItem('currentColor', currentColor);
-    } else if (guess > secretNumber) {
-      // When guess is too high
-      score--;
-      document.querySelector('.message').textContent = '📈 Too high!';
-      document.querySelector('.score').textContent = score;
-      localStorage.setItem('message', '📈 Too high!');
-      localStorage.setItem('score', score);
-    } else if (guess < secretNumber) {
-      // When guess is too low
-      score--;
-      document.querySelector('.message').textContent = '📉 Too low!';
-      document.querySelector('.score').textContent = score;
-      localStorage.setItem('message', '📉 Too low!');
-      localStorage.setItem('score', score);
+  if (!guess) {
+    // when there is no input
+    displayMessage('😐✋ No number!');
+  } else if (guess === secretNumber) {
+    // When player wins
+    if (score > highScore) {
+      highScore = score;
+      displayHighScore(highScore);
+      localStorage.setItem('highScore', highScore);
     }
-  }
-
-  if (!(score > 0)) {
-    currentColor = colors.tertiary;
-    document.querySelector('.message').textContent = 'You lost! 😭';
+    displayColor(colors.secondary);
+    displayMessage('🎉 Corrent Number!');
     hasCompleted();
-    document.body.style.backgroundColor = currentColor;
-
-    localStorage.setItem('message', 'You lost! 😭');
-    localStorage.setItem('currentColor', currentColor);
+    document.querySelector('.number').style.width = `${35}rem`;
+    displaySecretNumber(secretNumber);
+  } else if (guess !== secretNumber) {
+    if (score > 1) {
+      displayMessage(guess > secretNumber ? '📈 Too high!' : '📉 Too low!');
+      decreaseScore();
+    } else {
+      decreaseScore();
+      displayColor(colors.tertiary);
+      displayMessage('You lost! 😭');
+      hasCompleted();
+      displaySecretNumber(secretNumber);
+    }
   }
 });
 
 document.querySelector('.again').addEventListener('click', function (e) {
-  document.querySelector('.guess').value = '';
-  document.querySelector('.check').style.cssText = `cursor: auto;`;
-  document.querySelector('.check').removeAttribute('disabled');
-  localStorage.clear();
+  clearInputField();
+  clearLocalStorage();
   fillLocalStorage();
 });
 
