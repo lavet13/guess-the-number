@@ -15,11 +15,11 @@ console.log(document.querySelector('.guess').value);
 
 // const number = Math.trunc(Math.random() * 20); // Math.trunc() doesn't round the number, just get rid of fractional part of number, result here is will be a number which goes from 0 to 19, because the result of this will never really include the number 20. it might only include like 19.999999... but of course we're cutting off that decimal part.
 
-// Math.rondom() by default gives us number between 0 and 1
+// Math.random() by default gives us number between 0 and 1
 
 // now it's between 1 to 20
 
-let score, secretNumber, message, currentColor, highScore;
+let score, secretNumber, message, currentColor, highScore, input;
 
 const colors = {
   primary: '#222',
@@ -68,7 +68,7 @@ const clearLocalStorage = function () {
 const fillLocalStorage = function () {
   if (!localStorage.getItem('score')) {
     score = 20;
-    secretNumber = Math.trunc(Math.random() * 20) + 1;
+    secretNumber = Math.trunc(Math.random() * 20) + 1; // from 1 to 20
     message = 'Start guessing...';
     currentColor = colors.primary;
 
@@ -91,7 +91,11 @@ const fillLocalStorage = function () {
   document.querySelector('.score').textContent = score;
   document.querySelector('.highscore').textContent = highScore;
   document.querySelector('.message').textContent = message;
-  document.querySelector('.number').textContent = '?';
+  document.querySelector('.number').textContent =
+    currentColor !== colors.primary ? secretNumber : '?';
+  document.querySelector('.guess').value = localStorage.getItem('input') || '';
+  document.querySelector('.number').style.width =
+    currentColor !== colors.primary ? `${35}rem` : `${25}rem`;
   document.body.style.backgroundColor = currentColor;
 };
 
@@ -150,6 +154,10 @@ document.querySelector('.again').addEventListener('click', function (e) {
   clearInputField();
   clearLocalStorage();
   fillLocalStorage();
+});
+
+document.querySelector('.guess').addEventListener('input', function (e) {
+  localStorage.setItem('input', this.value);
 });
 
 /*
